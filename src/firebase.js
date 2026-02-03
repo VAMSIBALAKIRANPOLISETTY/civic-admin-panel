@@ -5,13 +5,12 @@ import { getAuth } from "firebase/auth";
 
 // PASTE YOUR CONFIG OBJECT HERE
 const firebaseConfig = {
-  apiKey: "AIzaSyCxTLwDnBie4PhrqKDw71MFutsAa9BLkos",
-  authDomain: "civic-issue-app-ecab1.firebaseapp.com",
-  projectId: "civic-issue-app-ecab1",
-  storageBucket: "civic-issue-app-ecab1.firebasestorage.app",
-  messagingSenderId: "1053710416602",
-  appId: "1:1053710416602:web:7acdadc11d08aacc9203e3",
-  measurementId: "G-WPNHW3ZYKQ"
+  apiKey: "AIzaSyB2MQuWFr2yrWxfZBNVOm5U3XnI0D7zRGU",
+  authDomain: "civic-pro-1547e.firebaseapp.com",
+  projectId: "civic-pro-1547e",
+  storageBucket: "civic-pro-1547e.firebasestorage.app",
+  messagingSenderId: "379542394446",
+  appId: "1:379542394446:web:06c4b8c96b286d4d30551f"
 };
 
 // Initialize Firebase
