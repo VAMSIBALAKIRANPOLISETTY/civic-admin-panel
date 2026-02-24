@@ -10,7 +10,7 @@ const SupervisorDashboard = () => {
   const navigate = useNavigate();
   const auth = getAuth();
 
-  // Field Workers (Supervisors route to them based on Issue Type)
+  // Tier 2: Field Workers
   const [workers] = useState([
     { id: 'W_01', name: 'Ramesh (Plumber)', type: 'Water' },
     { id: 'W_02', name: 'Suresh (Electrician)', type: 'Street Light' },
@@ -19,19 +19,24 @@ const SupervisorDashboard = () => {
   ]);
 
   useEffect(() => {
-    // Fetch all issues (in a production app, we would query specifically for this supervisor's ID)
+    // 1. Get the currently logged-in Area Supervisor's unique ID
+    const currentUserId = auth.currentUser?.uid;
+    if (!currentUserId) return;
+
+    // 2. Fetch the issues
     const q = query(collection(db, "issues"), orderBy("timestamp", "desc"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const issuesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       
-      // For this MVP, we only show issues that have been assigned by the Admin
-      const assignedIssues = issuesData.filter(issue => issue.assignedSupervisorId);
-      setIssues(assignedIssues);
+      // 3. THE FIX: Filter the list so it ONLY shows tickets assigned to THIS exact supervisor
+      const myZoneIssues = issuesData.filter(issue => issue.assignedSupervisorId === currentUserId);
+      
+      setIssues(myZoneIssues);
     });
+    
     return () => unsubscribe();
-  }, []);
+  }, [auth.currentUser]); // Re-run if the user session changes
 
-  // Supervisor Action: Dispatch Field Worker
   const handleDispatchWorker = async (firestoreDocId, workerId) => {
     const worker = workers.find(w => w.id === workerId);
     if (!worker) return;
@@ -40,10 +45,9 @@ const SupervisorDashboard = () => {
     await updateDoc(issueRef, {
       dispatchedWorkerId: worker.id,
       dispatchedWorkerName: worker.name,
-      status: "In Progress" // Automatically moves to In Progress
+      status: "In Progress"
     });
 
-    // Simulate the SMS to the worker
     alert(`📲 SMS Dispatched to ${worker.name}:\n\n"New Task Assigned! Please check location coordinates and resolve immediately."`);
   };
 
@@ -112,12 +116,10 @@ const SupervisorDashboard = () => {
                           ) : (
                             <option value="" disabled>Send Worker...</option>
                           )}
-                          {/* Suggest workers based on the issue type */}
                           {workers
                             .filter(w => w.type === issue.issueType || issue.issueType === 'Others')
                             .map(w => <option key={w.id} value={w.id}>{w.name}</option>)
                           }
-                          {/* Fallback for other workers */}
                           {workers.filter(w => w.type !== issue.issueType).map(w => <option key={w.id} value={w.id}>{w.name}</option>)}
                         </select>
                       </td>

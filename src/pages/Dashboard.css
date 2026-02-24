@@ -1,3 +1,4 @@
+/*
 * { box-sizing: border-box; }
 body { margin: 0; font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
 .admin-layout { display: flex; min-height: 100vh; }
@@ -26,10 +27,238 @@ td { padding: 16px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
 .evidence-thumb:hover { transform: scale(1.1); }
 
 .status-select { padding: 6px; border-radius: 4px; border: 1px solid #cbd5e1; cursor: pointer; width: 100%; }
-
+*/
 /* Status Badge Colors */
+/*
 .status-badge { padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; border: none; cursor: pointer; appearance: none; text-align: center;}
 .status-submitted { background: #fff7ed; color: #c2410c; }
 .status-assigned { background: #f3e8ff; color: #7e22ce; }
 .status-in-progress { background: #eff6ff; color: #2563eb; }
 .status-resolved { background: #f0fdf4; color: #16a34a; }
+*/
+/* =========================================================
+   CIVIC ADMIN PANEL - MASTER STYLESHEET
+   Edit the hex colors (#...) to change the app's theme!
+========================================================= */
+
+/* --- 1. GLOBAL RESETS & FONTS --- */
+* { 
+  box-sizing: border-box; 
+}
+
+body { 
+  margin: 0; 
+  font-family: 'Inter', 'Segoe UI', sans-serif; /* Change your main font here */
+  background-color: #f3f4f6; /* The light gray background behind the cards */
+}
+
+/* --- 2. MAIN LAYOUT GRID --- */
+.admin-layout { 
+  display: flex; 
+  min-height: 100vh; 
+}
+
+.main-content { 
+  flex-grow: 1; 
+  display: flex; 
+  flex-direction: column; 
+  overflow-x: hidden; 
+}
+
+/* --- 3. THE LEFT SIDEBAR --- */
+.sidebar { 
+  width: 250px; 
+  background-color: #1e293b; /* Dark Navy Sidebar Background */
+  color: white; 
+  display: flex; 
+  flex-direction: column; 
+  justify-content: space-between; /* Pushes the logout button to the bottom */
+}
+
+.logo { 
+  font-size: 1.2rem; 
+  font-weight: bold; 
+  padding: 24px; 
+  border-bottom: 1px solid #334155; /* Subtle line under the logo */
+}
+
+.sidebar nav a { 
+  display: block; 
+  padding: 12px 24px; 
+  color: #94a3b8; /* Unselected link color */
+  text-decoration: none; 
+  transition: all 0.2s ease;
+}
+
+.sidebar nav a:hover {
+  background-color: #334155;
+  color: white;
+}
+
+.sidebar nav a.active { 
+  background-color: #334155; 
+  color: white; 
+  border-left: 4px solid #3b82f6; /* The blue accent line on the active tab */
+}
+
+.logout-btn { 
+  background: #ef4444; /* Red logout button */
+  color: white; 
+  border: none; 
+  padding: 15px; 
+  cursor: pointer; 
+  font-weight: bold; 
+  margin: 20px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.logout-btn:hover {
+  background: #dc2626; /* Darker red on hover */
+}
+
+/* --- 4. TOP NAVIGATION BAR --- */
+.topbar { 
+  background: white; 
+  height: 64px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  padding: 0 32px; 
+  border-bottom: 1px solid #e2e8f0; 
+}
+
+.topbar h2 {
+  font-size: 1.25rem;
+  color: #0f172a;
+  margin: 0;
+}
+
+/* --- 5. CARDS & CONTAINERS (Where the table lives) --- */
+.content-container { 
+  padding: 32px; 
+}
+
+.card { 
+  background: white; 
+  border-radius: 8px; /* How round the corners of the white box are */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* The soft shadow drop */
+  overflow: hidden; 
+}
+
+.card-header { 
+  padding: 24px; 
+  border-bottom: 1px solid #f1f5f9; 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+}
+
+.card-header h3 {
+  margin: 0;
+  color: #334155;
+}
+
+.count-badge { 
+  background: #eff6ff; 
+  color: #3b82f6; 
+  padding: 4px 12px; 
+  border-radius: 12px; 
+  font-weight: bold; 
+  font-size: 0.85rem;
+}
+
+/* --- 6. THE DATA TABLE --- */
+.table-responsive { 
+  width: 100%; 
+  overflow-x: auto; 
+}
+
+table { 
+  width: 100%; 
+  border-collapse: collapse; 
+}
+
+th { 
+  background: #f8fafc; /* Light gray header row */
+  color: #64748b; 
+  padding: 16px; 
+  text-align: left; 
+  font-size: 0.85rem; 
+  text-transform: uppercase; /* Makes the column headers ALL CAPS */
+}
+
+td { 
+  padding: 16px; 
+  border-bottom: 1px solid #f1f5f9; 
+  vertical-align: middle; 
+  color: #334155;
+}
+
+/* Constrains long text so it doesn't break the table */
+.location-cell, .desc-cell { 
+  max-width: 200px; 
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+}
+
+/* --- 7. IMAGES & DROPDOWNS --- */
+.evidence-thumb { 
+  width: 50px; 
+  height: 50px; 
+  border-radius: 6px; 
+  object-fit: cover; 
+  cursor: pointer; 
+  transition: transform 0.2s;
+}
+
+.evidence-thumb:hover { 
+  transform: scale(1.1); /* Slight zoom when hovering over the photo */
+}
+
+.status-select { 
+  padding: 8px; 
+  border-radius: 4px; 
+  border: 1px solid #cbd5e1; 
+  cursor: pointer; 
+  width: 100%; 
+  background-color: white;
+  color: #334155;
+}
+
+/* --- 8. STATUS BADGE COLORS (Change these to match your branding) --- */
+.status-badge { 
+  padding: 6px 12px; 
+  border-radius: 20px; /* Pill shape */
+  font-size: 0.85rem; 
+  font-weight: bold; 
+  border: none; 
+  cursor: pointer; 
+  appearance: none; 
+  text-align: center;
+}
+
+/* New ticket from the Android App */
+.status-submitted { 
+  background: #fff7ed; /* Light Orange */
+  color: #c2410c; /* Dark Orange Text */
+}
+
+/* Routed to an Area Supervisor */
+.status-assigned { 
+  background: #f3e8ff; /* Light Purple */
+  color: #7e22ce; /* Dark Purple Text */
+}
+
+/* Worker has been dispatched */
+.status-in-progress { 
+  background: #eff6ff; /* Light Blue */
+  color: #2563eb; /* Dark Blue Text */
+}
+
+/* Task Complete */
+.status-resolved { 
+  background: #f0fdf4; /* Light Green */
+  color: #16a34a; /* Dark Green Text */
+}

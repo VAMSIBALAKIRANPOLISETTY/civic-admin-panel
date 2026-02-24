@@ -19,7 +19,7 @@ const Login = () => {
       await signInWithEmailAndPassword(auth, email, password);
       
       // If successful, jump to the dashboard
-      navigate('/dashboard'); 
+      navigate('/'); 
     } catch (err) {
       // If password is wrong or user doesn't exist, show error
       setError("Login Failed: " + err.message);
