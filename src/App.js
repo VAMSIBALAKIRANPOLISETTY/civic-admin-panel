@@ -8,6 +8,7 @@ import { db } from './firebase';
 import Login from './pages/Login';
 import AdminDashboard from './pages/AdminDashboard';
 import SupervisorDashboard from './pages/SupervisorDashboard';
+import Profile from './pages/Profile';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -87,6 +88,12 @@ function App() {
         <Route path="/supervisor" element={
           user && role === 'supervisor' ? <SupervisorDashboard /> : <Navigate to="/" />
         } />
+
+        {/* Protected Profile Route */}
+        <Route path="/profile" element={
+          user ? <Profile /> : <Navigate to="/" />
+        } />
+        
       </Routes>
     </Router>
   );
