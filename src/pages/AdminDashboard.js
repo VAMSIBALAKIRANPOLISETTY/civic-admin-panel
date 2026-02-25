@@ -11,15 +11,12 @@ const AdminDashboard = () => {
   const [supervisors, setSupervisors] = useState([]);
   const [view, setView] = useState('dashboard'); 
   const [searchQuery, setSearchQuery] = useState('');
-
-  // Bulk Delete State
   const [selectedTickets, setSelectedTickets] = useState([]);
 
-  // New Supervisor State
   const [supName, setSupName] = useState('');
   const [supEmail, setSupEmail] = useState('');
   const [supPassword, setSupPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // Password visibility
+  const [showPassword, setShowPassword] = useState(false); 
   const [supZone, setSupZone] = useState('North');
   const [isCreating, setIsCreating] = useState(false);
   const [replacingSup, setReplacingSup] = useState(null);
@@ -43,16 +40,12 @@ const AdminDashboard = () => {
     return () => { unsubIssues(); unsubSups(); };
   }, []);
 
-  // --- BULK DELETE LOGIC ---
   const toggleSelectTicket = (issueId) => {
-    setSelectedTickets(prev => 
-      prev.includes(issueId) ? prev.filter(id => id !== issueId) : [...prev, issueId]
-    );
+    setSelectedTickets(prev => prev.includes(issueId) ? prev.filter(id => id !== issueId) : [...prev, issueId]);
   };
 
   const handleBulkDelete = async () => {
     if (selectedTickets.length === 0) return;
-
     const confirmText = window.prompt(`🔥 WARNING: You are about to PERMANENTLY delete ${selectedTickets.length} ticket(s) from the database.\n\nTo confirm this action and save storage space, type "DELETE" below:`);
     
     if (confirmText !== "DELETE") {
@@ -62,19 +55,15 @@ const AdminDashboard = () => {
 
     try {
       const batch = writeBatch(db);
-      selectedTickets.forEach(issueId => {
-        batch.delete(doc(db, "issues", issueId));
-      });
+      selectedTickets.forEach(issueId => batch.delete(doc(db, "issues", issueId)));
       await batch.commit();
-      
-      setSelectedTickets([]); // Clear selections after success
+      setSelectedTickets([]); 
       alert(`✅ ${selectedTickets.length} ticket(s) permanently deleted.`);
     } catch (error) {
       alert("Error deleting tickets: " + error.message);
     }
   };
 
-  // --- ROUTING LOGIC ---
   const handleAssignSupervisor = async (firestoreDocId, supervisorId) => {
     const supervisor = supervisors.find(s => s.id === supervisorId);
     if (!supervisor) return;
@@ -86,7 +75,6 @@ const AdminDashboard = () => {
     });
   };
 
-  // --- SUPERVISOR MANAGEMENT ---
   const handleCreateSupervisor = async (e) => {
     e.preventDefault();
     setIsCreating(true);
@@ -164,8 +152,6 @@ const AdminDashboard = () => {
         </header>
 
         <div className="content-container">
-          
-          {/* VIEW 1: DASHBOARD */}
           {view === 'dashboard' && (
             <div className="card">
               <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -173,7 +159,6 @@ const AdminDashboard = () => {
                   <h3 style={{ display: 'inline-block', marginRight: '15px' }}>Active City Tickets</h3>
                   <span className="count-badge">{issues.length} Active</span>
                 </div>
-                {/* BULK DELETE BUTTON */}
                 {selectedTickets.length > 0 && (
                   <button onClick={handleBulkDelete} style={{ background: '#ef4444', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}>
                     🗑️ Delete Selected ({selectedTickets.length})
@@ -228,7 +213,6 @@ const AdminDashboard = () => {
             </div>
           )}
 
-          {/* VIEW 2: MANAGE SUPERVISORS & ROSTER */}
           {view === 'supervisors' && (
             <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
               <div className="card" style={{ flex: '1', minWidth: '300px', padding: '24px' }}>
@@ -254,16 +238,12 @@ const AdminDashboard = () => {
                     <label style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#64748b' }}>Login Email</label>
                     <input type="email" required value={supEmail} onChange={(e) => setSupEmail(e.target.value)} style={{ width: '100%', padding: '10px', marginTop: '5px', borderRadius: '5px', border: '1px solid #cbd5e1' }} />
                   </div>
-                  
-                  {/* Password with Show/Hide Toggle */}
                   <div>
                     <label style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#64748b' }}>Temporary Password</label>
                     <div style={{ position: 'relative', display: 'flex', alignItems: 'center', marginTop: '5px' }}>
                       <input 
                         type={showPassword ? "text" : "password"} 
-                        required minLength="6" 
-                        value={supPassword} 
-                        onChange={(e) => setSupPassword(e.target.value)} 
+                        required minLength="6" value={supPassword} onChange={(e) => setSupPassword(e.target.value)} 
                         style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #cbd5e1', paddingRight: '60px' }} 
                       />
                       <button 
@@ -274,7 +254,6 @@ const AdminDashboard = () => {
                       </button>
                     </div>
                   </div>
-                  
                   <div style={{display: 'flex', gap: '10px'}}>
                     <button type="submit" disabled={isCreating} style={{ flex: 1, backgroundColor: replacingSup ? '#eab308' : '#10b981', color: 'white', padding: '12px', border: 'none', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}>
                       {isCreating ? 'Processing...' : replacingSup ? 'Execute Migration' : 'Create Account'}
@@ -310,7 +289,6 @@ const AdminDashboard = () => {
             </div>
           )}
 
-          {/* VIEW 3: GLOBAL ARCHIVE */}
           {view === 'archive' && (
             <div className="card">
               <div className="card-header" style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', alignItems: 'center' }}>
@@ -319,7 +297,6 @@ const AdminDashboard = () => {
                   value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
                   style={{ flex: 1, padding: '10px', borderRadius: '5px', border: '1px solid #cbd5e1' }}
                 />
-                {/* BULK DELETE BUTTON */}
                 {selectedTickets.length > 0 && (
                   <button onClick={handleBulkDelete} style={{ background: '#ef4444', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}>
                     🗑️ Delete Selected ({selectedTickets.length})

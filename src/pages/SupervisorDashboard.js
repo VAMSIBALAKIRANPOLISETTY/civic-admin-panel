@@ -8,7 +8,7 @@ import './Dashboard.css';
 const SupervisorDashboard = () => {
   const [issues, setIssues] = useState([]); 
   const [archivedIssues, setArchivedIssues] = useState([]); 
-  const [allWorkers, setAllWorkers] = useState([]); // Holds ALL workers, even deleted ones, for history
+  const [allWorkers, setAllWorkers] = useState([]); 
   const [workerStats, setWorkerStats] = useState({}); 
   const [view, setView] = useState('dashboard'); 
   const [searchQuery, setSearchQuery] = useState('');
@@ -49,22 +49,18 @@ const SupervisorDashboard = () => {
     return () => { unsubIssues(); unsubWorkers(); };
   }, [auth.currentUser]);
 
-  // The Active Roster (Filters out soft-deleted workers)
   const activeWorkers = allWorkers.filter(w => !w.isDeleted);
 
   const handleAddWorker = async (e) => {
     e.preventDefault();
     setIsAdding(true);
     try {
-      // DATA PRESERVATION CHECK: Did this worker exist before?
       const returningWorker = allWorkers.find(w => w.name.toLowerCase() === newWorkerName.toLowerCase() && w.type === newWorkerType && w.isDeleted);
       
       if (returningWorker) {
-        // Un-delete them to restore their history!
         await updateDoc(doc(db, "workers", returningWorker.id), { isDeleted: false });
         alert(`✅ Welcome back! ${newWorkerName} has been restored with their historical task data.`);
       } else {
-        // Brand new worker
         await addDoc(collection(db, "workers"), {
           name: newWorkerName, type: newWorkerType, supervisorId: auth.currentUser.uid, isDeleted: false
         });
@@ -79,7 +75,6 @@ const SupervisorDashboard = () => {
   };
 
   const handleRemoveWorker = async (workerId, workerName) => {
-    // EXPLICIT LOCK LOGIC: Are they currently assigned to a ticket that is NOT resolved?
     const isWorking = issues.some(issue => issue.dispatchedWorkerId === workerId && issue.status !== "Resolved");
     
     if (isWorking) {
@@ -91,7 +86,6 @@ const SupervisorDashboard = () => {
     if (confirmText !== workerName) return; 
 
     try {
-      // SOFT DELETE: Preserves them in the database so past tickets still have their name
       await updateDoc(doc(db, "workers", workerId), { isDeleted: true });
       alert(`🗑️ ${workerName}'s profile has been archived.`);
     } catch (error) {
@@ -140,8 +134,6 @@ const SupervisorDashboard = () => {
         </header>
 
         <div className="content-container">
-          
-          {/* VIEW 1: ACTIVE TICKETS */}
           {view === 'dashboard' && (
             <div className="card">
               <div className="table-responsive">
@@ -183,7 +175,6 @@ const SupervisorDashboard = () => {
             </div>
           )}
 
-          {/* VIEW 2: MANAGE TEAM */}
           {view === 'team' && (
             <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
               <div className="card" style={{ flex: '1', minWidth: '300px', padding: '24px' }}>
@@ -230,7 +221,6 @@ const SupervisorDashboard = () => {
             </div>
           )}
 
-          {/* VIEW 3: ARCHIVE */}
           {view === 'archive' && (
             <div className="card">
               <div className="card-header"><input type="text" placeholder="🔍 Search Archive..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} style={{ padding: '10px', width: '100%', maxWidth: '400px' }}/></div>

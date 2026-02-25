@@ -1,35 +1,45 @@
 /* =========================================================
    CIVIC ADMIN PANEL - MASTER STYLESHEET
+   Organized into editable blocks. Change hex codes (#...) to theme!
 ========================================================= */
 
-/* --- 1. GLOBAL RESETS & FONTS --- */
+/* ---------------------------------------------------
+   BLOCK 1: GLOBAL FONTS & BACKGROUND
+   Edit the font-family or main background color here.
+--------------------------------------------------- */
 * { 
   box-sizing: border-box; 
 }
 
 body { 
   margin: 0; 
+  /* Change 'Inter' or 'Segoe UI' to your preferred Google Font */
   font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f3f4f6;
+  background-color: #f3f4f6; /* The light gray background of the app */
 }
 
-/* --- 2. MAIN LAYOUT GRID (FIXED VIEWPORT) --- */
-/* This stops the page from stretching and keeps the sidebar locked in place */
+/* ---------------------------------------------------
+   BLOCK 2: MAIN LAYOUT (FIXED VIEWPORT)
+   This stops the page from stretching and locks the sidebar.
+--------------------------------------------------- */
 .admin-layout { 
   display: flex; 
-  height: 100vh; 
-  overflow: hidden; 
+  height: 100vh; /* Locks app to monitor height */
+  overflow: hidden; /* Prevents whole-page scrolling */
 }
 
 .main-content { 
   flex-grow: 1; 
   display: flex; 
   flex-direction: column; 
-  overflow-y: auto; /* Only the right side of the screen scrolls */
+  overflow-y: auto; /* Allows ONLY the right side to scroll */
   background-color: #f8fafc;
 }
 
-/* --- 3. THE LEFT SIDEBAR --- */
+/* ---------------------------------------------------
+   BLOCK 3: THE LEFT SIDEBAR
+   Change the dark blue (#0f172a) to match your city's branding.
+--------------------------------------------------- */
 .sidebar { 
   width: 250px; 
   background-color: #0f172a; /* Deep Navy Blue */
@@ -58,7 +68,7 @@ body {
 .sidebar nav a { 
   display: block; 
   padding: 14px 24px; 
-  color: #94a3b8; 
+  color: #94a3b8; /* Unselected link color */
   text-decoration: none; 
   font-weight: 500;
   transition: all 0.2s ease;
@@ -72,11 +82,11 @@ body {
 .sidebar nav a.active { 
   background-color: #1e293b; 
   color: white; 
-  border-left: 4px solid #3b82f6; /* Blue active indicator */
+  border-left: 4px solid #3b82f6; /* Blue active indicator line */
 }
 
 .logout-btn { 
-  background: #ef4444; 
+  background: #ef4444; /* Red logout button */
   color: white; 
   border: none; 
   padding: 15px; 
@@ -91,7 +101,10 @@ body {
   background: #dc2626; 
 }
 
-/* --- 4. TOP NAVIGATION BAR --- */
+/* ---------------------------------------------------
+   BLOCK 4: TOP NAVIGATION BAR
+   The white bar sitting above your main content.
+--------------------------------------------------- */
 .topbar { 
   background: white; 
   min-height: 70px; 
@@ -114,7 +127,10 @@ body {
   color: #64748b;
 }
 
-/* --- 5. CARDS & CONTAINERS --- */
+/* ---------------------------------------------------
+   BLOCK 5: CONTENT CARDS & CONTAINERS
+   The white boxes that hold your tables and forms.
+--------------------------------------------------- */
 .content-container { 
   padding: 32px; 
 }
@@ -142,6 +158,7 @@ body {
   font-size: 1.1rem;
 }
 
+/* The little blue number bubbles next to headers */
 .count-badge { 
   background: #eff6ff; 
   color: #2563eb; 
@@ -151,7 +168,10 @@ body {
   font-size: 0.85rem;
 }
 
-/* --- 6. THE DATA TABLE --- */
+/* ---------------------------------------------------
+   BLOCK 6: THE DATA TABLES
+   Controls the look of your ticket and worker lists.
+--------------------------------------------------- */
 .table-responsive { 
   width: 100%; 
   overflow-x: auto; 
@@ -183,14 +203,14 @@ td {
 }
 
 tr:last-child td {
-  border-bottom: none;
+  border-bottom: none; /* Removes double border at bottom of table */
 }
 
 tr:hover td {
-  background-color: #f8fafc;
+  background-color: #f8fafc; /* Slight highlight when mouse is over a row */
 }
 
-/* Constrains long text so it doesn't break the table */
+/* Constrains long text descriptions so they don't break the table */
 .location-cell, .desc-cell { 
   max-width: 250px; 
   white-space: nowrap; 
@@ -198,7 +218,10 @@ tr:hover td {
   text-overflow: ellipsis; 
 }
 
-/* --- 7. IMAGES, DROPDOWNS & INPUTS --- */
+/* ---------------------------------------------------
+   BLOCK 7: IMAGES, DROPDOWNS & INPUTS
+   Controls the evidence photos and dispatch select menus.
+--------------------------------------------------- */
 .evidence-thumb { 
   width: 55px; 
   height: 55px; 
@@ -210,7 +233,7 @@ tr:hover td {
 }
 
 .evidence-thumb:hover { 
-  transform: scale(1.15); 
+  transform: scale(1.15); /* Slight zoom when hovering */
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
@@ -228,11 +251,14 @@ tr:hover td {
 }
 
 .status-select:focus {
-  border-color: #3b82f6;
+  border-color: #3b82f6; /* Blue glow when clicking a dropdown */
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
 }
 
-/* --- 8. STATUS BADGE COLORS --- */
+/* ---------------------------------------------------
+   BLOCK 8: STATUS BADGE COLORS
+   Change these hex codes to alter your progress colors!
+--------------------------------------------------- */
 .status-badge { 
   padding: 6px 14px; 
   border-radius: 20px; 
@@ -247,24 +273,24 @@ tr:hover td {
 
 /* New ticket from the Android App */
 .status-submitted { 
-  background: #fff7ed; 
-  color: #c2410c; 
+  background: #fff7ed; /* Light Orange */
+  color: #c2410c;      /* Dark Orange Text */
 }
 
 /* Routed to an Area Supervisor */
 .status-assigned { 
-  background: #f3e8ff; 
-  color: #7e22ce; 
+  background: #f3e8ff; /* Light Purple */
+  color: #7e22ce;      /* Dark Purple Text */
 }
 
 /* Worker has been dispatched */
 .status-in-progress { 
-  background: #eff6ff; 
-  color: #2563eb; 
+  background: #eff6ff; /* Light Blue */
+  color: #2563eb;      /* Dark Blue Text */
 }
 
 /* Task Complete */
 .status-resolved { 
-  background: #f0fdf4; 
-  color: #16a34a; 
+  background: #f0fdf4; /* Light Green */
+  color: #16a34a;      /* Dark Green Text */
 }

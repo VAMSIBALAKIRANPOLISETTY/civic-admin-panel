@@ -7,7 +7,7 @@ import './Dashboard.css';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // New state for visibility
+  const [showPassword, setShowPassword] = useState(false); 
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -49,7 +49,7 @@ const Login = () => {
             <label style={{ fontWeight: 'bold', color: '#64748b', fontSize: '0.9rem' }}>Password</label>
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center', marginTop: '5px' }}>
               <input 
-                type={showPassword ? "text" : "password"} // Dynamic input type
+                type={showPassword ? "text" : "password"} 
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)} 
                 required 
