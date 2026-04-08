@@ -310,6 +310,7 @@ const AdminDashboard = () => {
                       <th style={{ width: '40px' }}></th>
                       <th>Issue ID</th>
                       <th>Type / Location</th>
+                      <th>Proof of Work</th>
                       <th>Resolved By</th>
                       <th>Zone</th>
                     </tr>
@@ -329,6 +330,15 @@ const AdminDashboard = () => {
                         </td>
                         <td style={{fontSize: '0.8rem', color: '#64748b'}}>{issue.issueId}</td>
                         <td><strong>{issue.issueType}</strong><br/><span style={{fontSize: '0.8rem'}}>{issue.location}</span></td>
+                        <td>
+                          {issue.resolvedImageUrl ? (
+                          <a href={issue.resolvedImageUrl} target="_blank" rel="noopener noreferrer">
+                          <img src={issue.resolvedImageUrl} alt="Proof" className="evidence-thumb" style={{ border: '2px solid #10b981' }} />
+                          </a>
+                            ) : (
+                              <span style={{fontSize: '0.8rem', color: '#94a3b8'}}>No Photo</span>
+                            )}
+                        </td>
                         <td><span style={{color: '#10b981', fontWeight: 'bold'}}>{issue.dispatchedWorkerName || "Unknown Worker"}</span></td>
                         <td><span className="count-badge">{issue.assignedSupervisorName}</span></td>
                       </tr>

@@ -311,19 +311,54 @@ const SupervisorDashboard = () => {
             </div>
           )}
 
+         {/* VIEW 3: ARCHIVE */}
           {view === 'archive' && (
             <div className="card">
-              <div className="card-header"><input type="text" placeholder="🔍 Search Archive..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} style={{ padding: '10px', width: '100%', maxWidth: '400px', borderRadius: '5px', border: '1px solid #cbd5e1' }}/></div>
+              <div className="card-header">
+                <input type="text" placeholder="🔍 Search Archive..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} style={{ padding: '10px', width: '100%', maxWidth: '400px', borderRadius: '5px', border: '1px solid #cbd5e1' }}/>
+              </div>
               <div className="table-responsive">
                 <table>
-                  <thead><tr><th>Issue ID</th><th>Type / Location</th><th>Resolved By</th><th>Action</th></tr></thead>
+                  <thead>
+                    <tr>
+                      <th>Issue ID</th>
+                      <th>Type / Location</th>
+                      <th>Proof of Work</th> {/* NEW COLUMN HEADER */}
+                      <th>Resolved By</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
                   <tbody>
                     {filteredArchive.map((issue) => (
                       <tr key={issue.id}>
                         <td style={{fontSize: '0.8rem', color: '#64748b'}}>{issue.issueId}</td>
-                        <td><strong>{issue.issueType}</strong><br/><span style={{fontSize: '0.8rem'}}>{issue.location}</span></td>
+                        <td>
+                          <strong>{issue.issueType}</strong><br/>
+                          <span style={{fontSize: '0.8rem'}}>{issue.location}</span>
+                        </td>
+                        
+                        {/* NEW: PROOF OF WORK IMAGE DISPLAY */}
+                        <td>
+                          {issue.resolvedImageUrl ? (
+                            <a href={issue.resolvedImageUrl} target="_blank" rel="noopener noreferrer">
+                              <img 
+                                src={issue.resolvedImageUrl} 
+                                alt="Proof" 
+                                className="evidence-thumb" 
+                                style={{ border: '2px solid #10b981' }} 
+                              />
+                            </a>
+                          ) : (
+                            <span style={{fontSize: '0.8rem', color: '#94a3b8'}}>No Photo</span>
+                          )}
+                        </td>
+
                         <td><span style={{color: '#10b981', fontWeight: 'bold'}}>{issue.dispatchedWorkerName || "Unknown Worker"}</span></td>
-                        <td><button onClick={() => handleReopenTicket(issue.id)} style={{ background: '#fef08a', color: '#854d0e', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>↺ Re-Open</button></td>
+                        <td>
+                          <button onClick={() => handleReopenTicket(issue.id)} style={{ background: '#fef08a', color: '#854d0e', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>
+                            ↺ Re-Open
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
