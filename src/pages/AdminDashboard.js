@@ -7,16 +7,16 @@ import './Dashboard.css';
 
 const AdminDashboard = () => {
   const [issues, setIssues] = useState([]); 
-  const [archivedIssues, setArchivedIssues] = useState([]); 
+  const [archivedIssues, setArchivedIssues] = useState([]);
   const [supervisors, setSupervisors] = useState([]);
   const [view, setView] = useState('dashboard'); 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTickets, setSelectedTickets] = useState([]);
-
+  
   const [supName, setSupName] = useState('');
   const [supEmail, setSupEmail] = useState('');
   const [supPassword, setSupPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); 
+  const [showPassword, setShowPassword] = useState(false);
   const [supZone, setSupZone] = useState('North');
   const [isCreating, setIsCreating] = useState(false);
   const [replacingSup, setReplacingSup] = useState(null);
@@ -28,7 +28,12 @@ const AdminDashboard = () => {
     const qIssues = query(collection(db, "issues"), orderBy("timestamp", "desc"));
     const unsubIssues = onSnapshot(qIssues, (snapshot) => {
       const allIssues = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setIssues(allIssues.filter(i => i.status !== "Resolved"));
+      
+      // Sort active issues by upvotes (descending) so highest priority is at the top
+      let active = allIssues.filter(i => i.status !== "Resolved");
+      active.sort((a, b) => (b.upvotes || 1) - (a.upvotes || 1));
+      
+      setIssues(active);
       setArchivedIssues(allIssues.filter(i => i.status === "Resolved"));
     });
 
@@ -47,7 +52,6 @@ const AdminDashboard = () => {
   const handleBulkDelete = async () => {
     if (selectedTickets.length === 0) return;
     const confirmText = window.prompt(`🔥 WARNING: You are about to PERMANENTLY delete ${selectedTickets.length} ticket(s) from the database.\n\nTo confirm this action and save storage space, type "DELETE" below:`);
-    
     if (confirmText !== "DELETE") {
       alert("Deletion aborted.");
       return;
@@ -100,11 +104,10 @@ const AdminDashboard = () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(secondaryAuth, supEmail, supPassword);
       const newUid = userCredential.user.uid;
-
       await setDoc(doc(db, "web_users", newUid), {
         role: 'supervisor', name: supName, email: supEmail, zone: replacingSup.zone
       });
-
+      
       const batch = writeBatch(db);
       const qTickets = query(collection(db, "issues"), where("assignedSupervisorId", "==", replacingSup.id));
       const ticketSnaps = await getDocs(qTickets);
@@ -117,7 +120,7 @@ const AdminDashboard = () => {
       batch.delete(doc(db, "web_users", replacingSup.id));
       await batch.commit(); 
       await signOut(secondaryAuth);
-
+      
       alert(`🔄 Success! ${supName} is now managing the ${replacingSup.zone} Zone.`);
       setReplacingSup(null);
       setSupName(''); setSupEmail(''); setSupPassword('');
@@ -172,6 +175,7 @@ const AdminDashboard = () => {
                       <th style={{ width: '40px' }}></th>
                       <th>Photo</th>
                       <th>Type / Location</th>
+                      <th>👍 Priority</th>
                       <th>Description</th>
                       <th>Route to Zone AS</th>
                       <th>Status</th>
@@ -193,6 +197,14 @@ const AdminDashboard = () => {
                           <strong>{issue.issueType}</strong><br/>
                           <span style={{fontSize: '0.8rem', color: '#64748b'}}>{issue.location}</span>
                         </td>
+                        
+                        {/* UPVOTE PRIORITY COLUMN */}
+                        <td>
+                          <span style={{ backgroundColor: '#eff6ff', color: '#2563eb', padding: '6px 12px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.9rem' }}>
+                            👍 {issue.upvotes || 1}
+                          </span>
+                        </td>
+
                         <td className="desc-cell">{issue.description}</td>
                         <td>
                           <select 
